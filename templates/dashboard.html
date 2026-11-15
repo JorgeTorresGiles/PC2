@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">RESUMEN GENERAL</div><h1>Panel principal</h1><p>Bienvenido, <strong>{{ usuario_actual['usuario'] }}</strong>. Aquí puedes consultar y administrar tus gastos.</p></div><a class="btn btn-primary" href="{{ url_for('nuevo_gasto') }}">＋ Registrar gasto</a></div>
+<div class="hero-banner"><div><span class="hero-label">TU ESPACIO FINANCIERO</span><h2>Tus gastos, bajo control.</h2><p>Organiza tus movimientos, visualiza totales y toma mejores decisiones con información clara.</p></div><div class="hero-decoration">S/</div></div>
+<div class="stat-grid">
+  <article class="stat-card"><div class="stat-top"><span>Total registrado</span><span class="stat-icon stat-icon-red">S/</span></div><div class="stat-value">S/ {{ totales['total'] | dinero }}</div><div class="stat-note">Suma de todos tus gastos</div></article>
+  <article class="stat-card"><div class="stat-top"><span>Gastos este mes</span><span class="stat-icon stat-icon-blue">◫</span></div><div class="stat-value">S/ {{ totales['mes'] | dinero }}</div><div class="stat-note">Movimientos del mes actual</div></article>
+  <article class="stat-card"><div class="stat-top"><span>Registros</span><span class="stat-icon stat-icon-amber">▤</span></div><div class="stat-value">{{ totales['cantidad'] }}</div><div class="stat-note">Operaciones registradas</div></article>
+  <article class="stat-card"><div class="stat-top"><span>Promedio por gasto</span><span class="stat-icon stat-icon-green">↗</span></div><div class="stat-value">S/ {{ totales['promedio'] | int | dinero }}</div><div class="stat-note">Importe medio de registro</div></article>
+</div>
+<div class="dashboard-grid">
+  <section class="panel"><div class="panel-heading"><div><h2>Últimos gastos</h2><p>Movimientos recientes que has registrado</p></div><a class="link-strong" href="{{ url_for('gastos') }}">Ver todos →</a></div>
+  {% if ultimos %}<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th class="num">Monto</th></tr></thead><tbody>{% for gasto in ultimos %}<tr><td>{{ gasto['fecha'] }}</td><td><span class="row-dot">●</span>{{ gasto['descripcion'] }}</td><td class="num amount-cell">S/ {{ gasto['monto_centimos'] | dinero }}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="empty"><div class="empty-icon">▤</div><h3>Aún no tienes gastos</h3><p>Registra tu primer movimiento para ver el resumen.</p><a class="btn btn-primary btn-small" href="{{ url_for('nuevo_gasto') }}">Registrar primer gasto</a></div>{% endif %}</section>
+  <section class="panel"><div class="panel-heading"><div><h2>Resumen mensual</h2><p>Distribución de los últimos meses con registros</p></div></div>
+    {% if mensuales %}<div class="month-bars">{% for fila in mensuales %}<div class="month-row"><div class="month-label"><strong>{{ fila['mes'] }}</strong><span>S/ {{ fila['total'] | dinero }}</span></div><div class="month-track"><div class="month-fill" style="width: {{ (fila['total'] / mayor * 100) | round(0) }}%"></div></div></div>{% endfor %}</div>{% else %}<div class="empty small-empty"><div class="empty-icon">◴</div><p>El gráfico se mostrará cuando registres gastos.</p></div>{% endif %}
+    <a class="btn btn-soft btn-full" href="{{ url_for('reportes') }}">Ver reporte completo →</a>
+  </section>
+</div>
+{% endblock %}

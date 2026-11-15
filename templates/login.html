@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block auth_content %}
+<div class="auth-card">
+  <section class="auth-art">
+    <div class="auth-art-label">PROYECTO ACADÉMICO · 2026</div>
+    <div class="floating-sign">S/</div>
+    <h1>Toma el control<br>de tus <em>gastos.</em></h1>
+    <p>Registra cada movimiento, consulta tus gastos y genera reportes claros desde un solo lugar.</p>
+    <div class="auth-features"><span>✓ Registro de gastos</span><span>✓ Reportes y filtros</span><span>✓ Base de datos SQLite</span></div>
+    <div class="auth-art-bottom">PRÁCTICA CALIFICADA 2 · JORGE ANTONIO TORRES GILES</div>
+  </section>
+  <section class="auth-form-side">
+    <div class="mini-brand"><span class="brand-mark">S/</span><strong>MIS GASTOS</strong></div>
+    <div class="login-heading"><div class="eyebrow">BIENVENIDO DE NUEVO</div><h2>Iniciar sesión</h2><p>Ingresa tus credenciales para acceder al sistema.</p></div>
+    <form action="{{ url_for('login') }}" method="post" class="form-stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="form-group"><label for="usuario">Usuario</label><input id="usuario" name="usuario" type="text" maxlength="50" required autofocus autocomplete="username" placeholder="Escribe tu usuario"></div>
+      <div class="form-group"><label for="clave">Contraseña</label><div class="password-wrap"><input id="clave" name="clave" type="password" maxlength="128" required autocomplete="current-password" placeholder="Escribe tu contraseña"><button type="button" class="show-password" data-toggle-password="clave" aria-label="Mostrar u ocultar contraseña">◉</button></div></div>
+      <button class="btn btn-primary btn-full" type="submit">Ingresar al sistema <span>→</span></button>
+    </form>
+    <div class="demo-credentials"><span class="demo-icon">ⓘ</span><div><strong>Acceso para la práctica</strong><p>Usuario: <code>admin</code> &nbsp; Contraseña: <code>123</code></p></div></div>
+    <p class="auth-foot">Sistema demostrativo para uso local.</p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema de gastos personales con Flask y SQLite - Practica Calificada 2">
+  <title>{{ titulo }} | Mis Gastos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body class="{% if usuario_actual %}con-sesion{% else %}sin-sesion{% endif %}">
+{% if usuario_actual %}
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Mis Gastos, inicio">
+        <span class="brand-mark">S/</span><span><strong>MIS GASTOS</strong><small>Control financiero personal</small></span>
+      </a>
+      <div class="sidebar-caption">NAVEGACIÓN</div>
+      <nav class="nav-links" aria-label="Menú principal">
+        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}activo{% endif %}"><span class="nav-icon">▦</span> Panel principal</a>
+        <a href="{{ url_for('gastos') }}" class="nav-link {% if request.endpoint in ['gastos','editar_gasto','nuevo_gasto'] %}activo{% endif %}"><span class="nav-icon">▤</span> Mis gastos</a>
+        <a href="{{ url_for('nuevo_gasto') }}" class="nav-link"><span class="nav-icon">＋</span> Registrar gasto</a>
+        <a href="{{ url_for('reportes') }}" class="nav-link {% if request.endpoint in ['reportes','exportar_csv'] %}activo{% endif %}"><span class="nav-icon">▥</span> Reportes</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="user-box"><span class="user-avatar">A</span><span><strong>{{ usuario_actual['usuario'] }}</strong><small>Sesión activa</small></span></div>
+        <form action="{{ url_for('logout') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="logout-btn" type="submit">↪ Cerrar sesión</button>
+        </form>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir o cerrar menú">☰</button>
+        <span class="topbar-course">PRÁCTICA CALIFICADA 2 · PROGRAMACIÓN Y DESARROLLO WEB</span>
+        <span class="topbar-chip">● Local · Flask + SQLite</span>
+      </header>
+      <main class="content">
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}<div class="alerts" aria-live="polite">{% for categoria, texto in mensajes %}<div class="alert alert-{{ categoria }}"><span>{{ texto }}</span><button type="button" class="alert-close" aria-label="Cerrar mensaje">×</button></div>{% endfor %}</div>{% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="footer">Desarrollado por <strong>Jorge Antonio Torres Giles</strong> · Python + Flask + SQLite</footer>
+    </div>
+  </div>
+{% else %}
+  <main class="auth-container">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}<div class="alerts auth-alerts">{% for categoria, texto in mensajes %}<div class="alert alert-{{ categoria }}"><span>{{ texto }}</span><button type="button" class="alert-close" aria-label="Cerrar">×</button></div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block auth_content %}{% endblock %}
+  </main>
+{% endif %}
+</body>
+</html>
